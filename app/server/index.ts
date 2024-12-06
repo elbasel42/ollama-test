@@ -4,3 +4,7 @@ export { getAiUser } from "./getAiUser";
 export { getMessages } from "./getMessages";
 export { getHumanUser } from "./getHumanUser";
 export { clearMessages } from "./clearMessages";
+export { saveConversation } from "./saveConversation";
+export { getUserId } from "./getUserId";
+export { setCurrentConversationId } from "./setCurrentConversationId";
+export { getCurrentConversationId } from "./getCurrentConversationId";

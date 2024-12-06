@@ -5,22 +5,24 @@ import { getAiResponse, getAiUser, getHumanUser } from "@server";
 import { revalidatePath } from "next/cache";
 
 export const handleNewUserMsg = async (msg: string) => {
-  const aiResponse = await getAiResponse(msg);
-  const aiUser = await getAiUser();
   const humanUser = await getHumanUser();
+  const aiUser = await getAiUser();
+
+  const aiResponse = await getAiResponse(msg);
 
   const newUserMessage = await prisma.message.create({
     data: {
-      user: { connect: { id: humanUser.id } },
       content: msg,
-      title: "",
+      conversationId: humanUser.currentConversationId,
+      userId: humanUser.id,
     },
   });
+
   const newAiMessage = await prisma.message.create({
     data: {
-      user: { connect: { id: aiUser.id } },
+      userId: aiUser.id,
       content: aiResponse.content.toString(),
-      title: "",
+      conversationId: humanUser.currentConversationId,
     },
   });
 

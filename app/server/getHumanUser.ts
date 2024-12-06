@@ -1,16 +1,20 @@
+"use server";
+
 import { prisma } from "@lib";
-import { createUser } from "./createUser";
+import { createUser, getUserId } from "@server";
 
 export const getHumanUser = async () => {
-  const dbAiUser = await prisma.user.findFirst({
+  const userId = await getUserId();
+
+  const existingUser = await prisma.user.findFirst({
     where: {
-      id: 0,
+      id: userId,
     },
   });
 
-  if (dbAiUser) return dbAiUser;
+  if (existingUser) return existingUser;
 
-  const humanUser = await createUser({ id: 0, name: "Human", email: "human@human.com" });
+  const newHumanUser = await createUser({ name: "Human" });
 
-  return humanUser;
+  return newHumanUser;
 };

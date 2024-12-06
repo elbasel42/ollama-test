@@ -18,19 +18,18 @@ datasource db {
 //   url      = env("DATABASE_URL")
 // }
 
-
 model User {
-  id    Int     @id @default(autoincrement())
-  name  String
-  email String  @unique
-  posts Message[]
+  id                    Int       @id @default(autoincrement())
+  name                  String
+  messages              Message[]
+  currentConversationId String    @default(cuid())
 }
 
+// Update Message model to include conversation
 model Message {
-  id      Int    @id @default(autoincrement())
-  title   String
-  content String?
-  userId  Int
-  user    User   @relation(fields: [userId], references: [id])
-	@@map("UserMessage")
+  id             Int    @id @default(autoincrement())
+  content        String
+  userId         Int
+  user           User   @relation(fields: [userId], references: [id])
+  conversationId String @default(cuid())
 }

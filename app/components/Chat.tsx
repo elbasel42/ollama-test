@@ -5,8 +5,7 @@ import { ChatForm } from "./ChatForm";
 import { Output } from "./Output";
 import { useOptimistic } from "react";
 import { handleNewUserMsg } from "../(pages)/(homepage)/actions";
-import { SendHorizontal, Trash2 } from "lucide-react";
-import { clearMessages } from "@server";
+import { clearMessages, getHumanUser } from "@server";
 
 interface ChatProps {
   messages: Message[];
@@ -25,7 +24,7 @@ export const Chat = ({ messages }: ChatProps) => {
 
   const updateState = (state: State, newMessage: Message) => {
     return {
-      optimisticMessages: [...messages, newMessage],
+      optimisticMessages: [...state.optimisticMessages, newMessage],
       pending: true,
     };
   };
@@ -38,16 +37,29 @@ export const Chat = ({ messages }: ChatProps) => {
   const { optimisticMessages, pending } = state;
 
   const postUserMessage = async (formData: FormData) => {
-    // "use server";
-    console.log(formData);
+    const humanUser = await getHumanUser();
+    const userId = humanUser.id;
+    const currentConversationId = humanUser.currentConversationId;
+
     const data = Object.fromEntries(formData.entries());
     const msg = data.msg.toString();
-    if (!msg) return;
-    const newUserMessage = { id: 0, content: msg, title: "", userId: -1 };
+
+    if (!msg) return console.error("Message cannot be empty");
+
+    if (!currentConversationId) return console.error("No conversation found");
+    const newUserMessage = {
+      id: -1,
+      conversationId: currentConversationId,
+      content: msg,
+      userId,
+    };
+
     optimisticallyUpdateMessages(newUserMessage);
     await handleNewUserMsg(msg);
   };
+
   const clearConversation = async () => {
+    // await saveConversation();
     await clearMessages();
   };
 
