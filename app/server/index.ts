@@ -9,3 +9,5 @@ export { getUserId } from "./getUserId";
 export { setCurrentConversationId } from "./setCurrentConversationId";
 export { getCurrentConversationId } from "./getCurrentConversationId";
 export { createMessage } from "./createMessage";
+export { getCurrentConversation } from "./getCurrentConversation";
+export { setUserId } from "./setUserId";

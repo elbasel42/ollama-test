@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@lib";
+import { setUserId } from "@server";
 // import { setCurrentConversationId } from "@server";
 
 type Args = {
@@ -17,6 +18,7 @@ export const createUser = async ({ id, name }: Args) => {
   });
 
   // await setCurrentConversationId(newUser.currentConversationId);
+  await setUserId(newUser.id);
 
   return newUser;
 };

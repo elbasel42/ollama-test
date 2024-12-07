@@ -1,12 +1,19 @@
-import { getMessages } from "@server";
+import { getCurrentConversation } from "@server";
 import { Chat } from "../../components/Chat";
 import { convertToUIMessage } from "@utils";
 
 const HomePage = async () => {
-  const messages = await getMessages();
-  const uiMessages = messages.map(convertToUIMessage);
+  // const humanUser = await getHumanUser();
+  // if (!humanUser) {
+  //   createUser({ name: "Human" });
+  // }
 
-  if (!uiMessages) return;
+  // const currentConversationId = humanUser?.currentConversationId;
+
+  const currentConversation = await getCurrentConversation();
+  // currentConversationId ?? ""
+
+  const uiMessages = currentConversation.map(convertToUIMessage);
 
   return (
     <main>

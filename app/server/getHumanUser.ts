@@ -12,9 +12,8 @@ export const getHumanUser = async () => {
     },
   });
 
-  if (existingUser) return existingUser;
+  // const newHumanUser = await createUser({ name: "Human" });
+  // if (existingUser) return existingUser;
 
-  const newHumanUser = await createUser({ name: "Human" });
-
-  return newHumanUser;
+  return existingUser;
 };

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import type { ReactNode } from "react";
+import { SetUpUser } from "@components";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,7 +26,8 @@ interface RootLayoutProps {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <html lang='en' className="dark app-scrollbar">
+    <html lang='en' className='dark app-scrollbar'>
+      <SetUpUser />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

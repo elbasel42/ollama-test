@@ -4,9 +4,10 @@ import { useChat } from "ai/react";
 import type { Message } from "ai";
 import { ChatForm } from "./ChatForm";
 import { Output } from "./Output";
-import { prisma } from "@lib";
-import { getHumanUser, saveConversation } from "@server";
-import { convertToPrismaMessage } from "@utils";
+import { saveConversation } from "@server";
+// import { prisma } from "@lib";
+// import { getHumanUser, saveConversation } from "@server";
+// import { convertToPrismaMessage } from "@utils";
 // import { Message } from "@prisma/client";
 // import { useOptimistic } from "react";
 // import { handleNewUserMsg } from "../(pages)/(homepage)/actions";
@@ -22,7 +23,9 @@ export const Chat = ({ initialMessages }: ChatProps) => {
   });
 
   const secondaryAction = async () => {
-    await saveConversation({ messages });
+    const initialMessagesLength = initialMessages.length;
+    const newMessages = messages.slice(initialMessagesLength);
+    await saveConversation({ messages: newMessages });
     setMessages([]);
   };
   return (
