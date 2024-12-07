@@ -1,7 +1,7 @@
 "use client";
 
 import { ChatMessage } from "@components";
-import type { Message } from "@prisma/client";
+import { Message } from "ai";
 import { useEffect, useRef } from "react";
 
 interface OutputProps {
@@ -20,11 +20,12 @@ export const Output = ({ messages }: OutputProps) => {
     });
   }, [messages]);
 
+  console.log({ message: messages[-1] });
   return (
-  <output ref={ref} className='space-y-4 block mb-[20vh]' >
-      {messages.map(({ id, content , userId}) => {
+    <output ref={ref} className='space-y-4 block mb-[20vh]'>
+      {messages.map(({ id, content }) => {
         if (!content) return null;
-        return <ChatMessage key={id} content={content} userId={userId}/>;
+        return <ChatMessage key={id} content={content} />;
       })}
     </output>
   );

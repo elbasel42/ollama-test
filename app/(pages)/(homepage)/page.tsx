@@ -1,12 +1,16 @@
 import { getMessages } from "@server";
 import { Chat } from "../../components/Chat";
+import { convertToUIMessage } from "@utils";
 
 const HomePage = async () => {
   const messages = await getMessages();
+  const uiMessages = messages.map(convertToUIMessage);
+
+  if (!uiMessages) return;
 
   return (
     <main>
-      <Chat messages={messages} />
+      <Chat initialMessages={uiMessages} />
     </main>
   );
 };

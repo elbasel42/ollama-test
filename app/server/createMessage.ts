@@ -1,14 +1,21 @@
-import { prisma } from "@lib";
-import { getCurrentConversationId } from "./getCurrentConversationId";
+"use server";
 
-export const createMessage = async (userId: number, msg: string) => {
-  const conversationId = await getCurrentConversationId();
+import { prisma } from "@lib";
+
+export type CreateMessage = {
+  content: string;
+  role: string;
+  userId: string;
+};
+export const createMessage = async (message: CreateMessage) => {
+
   const newMessage = await prisma.message.create({
     data: {
-      userId,
-      content: msg,
-      conversationId,
+      content: message.content,
+      role: message.role,
+      userId: message.userId,
     },
   });
+
   return newMessage;
 };

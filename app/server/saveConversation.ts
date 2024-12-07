@@ -1,9 +1,19 @@
 "use server";
 
 import { prisma } from "@lib";
+import { convertToPrismaMessage } from "@utils";
+import { Message } from "ai";
 
-export const saveConversation = async () => {
-  const newConversation = await prisma.conversation.create({});
+type Conversation = {
+  messages: Message[];
+};
 
-  return newConversation;
+export const saveConversation = async ({ messages }: Conversation) => {
+  const prismaMessages = await Promise.all(
+    messages.map(async (m) => await convertToPrismaMessage(m))
+  );
+
+  await prisma.message.createMany({
+    data: prismaMessages,
+  });
 };

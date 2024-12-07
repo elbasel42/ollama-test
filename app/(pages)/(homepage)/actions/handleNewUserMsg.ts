@@ -1,41 +1,29 @@
 "use server";
 
-import { createMessage, getAiResponse, getAiUser, getHumanUser } from "@server";
+import { createMessage, getAiResponse, getHumanUser } from "@server";
 import { revalidatePath } from "next/cache";
 
-export const handleNewUserMsg = async (msg: string) => {
+export const handleNewUserMsg = async (msg: string): Promise<void> => {
   const humanUser = await getHumanUser();
-  const aiUser = await getAiUser();
+  if (!humanUser) {
+    throw new Error("Failed to retrieve human user.");
+  }
 
+  // Create the initial user message in the system
+  await createMessage(humanUser.id, msg);
+
+  // Fetch the AI response stream
   const aiResponse = await getAiResponse(msg);
 
-  const newUserMsg = await createMessage(humanUser.id, msg);
-  // const aiNewMsg = await createMessage(aiUser.id, aiResponse);
-  console.log({ newUserMsg });
-  // const newUserMessage = await prisma.message.create({
-  //   data: {
-  //     content: msg,
-  //     conversationId: humanUser.currentConversationId,
-  //     userId: humanUser.id,
-  //   },
-  // });
+  const reader = aiResponse.getReader();
 
-  // for await (const chunk of aiResponse) {
-  //   const content = chunk.content.toString();
-  //   createMessage(aiUser.id, content);
-  //   revalidatePath("/");
-  // }
+  for (;;) {
+    const { done, value } = await reader.read();
 
-  // const newAiMessage = await prisma.message.create({
-  //   data: {
-  //     userId: aiUser.id,
-  //     // content: aiResponse,
-  //     conversationId: humanUser.currentConversationId,
-  //   },
-  // });
-
-  console.clear();
-  revalidatePath("/");
-  console.log(newUserMessage.content);
-  console.log(newAiMessage.content);
+    if (done) break;
+    const newMessage = await createMessage(-1, value);
+    console.log({ newMessage });
+    revalidatePath("/")
+  }
+  // Process AI response events as they arrive
 };

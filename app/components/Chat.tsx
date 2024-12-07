@@ -1,75 +1,38 @@
 "use client";
 
-import { Message } from "@prisma/client";
+import { useChat } from "ai/react";
+import type { Message } from "ai";
 import { ChatForm } from "./ChatForm";
 import { Output } from "./Output";
-import { useOptimistic } from "react";
-import { handleNewUserMsg } from "../(pages)/(homepage)/actions";
-import { clearMessages, getHumanUser } from "@server";
+import { prisma } from "@lib";
+import { getHumanUser, saveConversation } from "@server";
+import { convertToPrismaMessage } from "@utils";
+// import { Message } from "@prisma/client";
+// import { useOptimistic } from "react";
+// import { handleNewUserMsg } from "../(pages)/(homepage)/actions";
+// import { clearMessages, getHumanUser } from "@server";
 
 interface ChatProps {
-  messages: Message[];
+  initialMessages: Message[];
 }
 
-type State = {
-  optimisticMessages: Message[];
-  pending: boolean;
-};
+export const Chat = ({ initialMessages }: ChatProps) => {
+  const { stop, isLoading, append, messages, setMessages } = useChat({
+    initialMessages,
+  });
 
-export const Chat = ({ messages }: ChatProps) => {
-  const initialState: State = {
-    optimisticMessages: messages,
-    pending: false,
+  const secondaryAction = async () => {
+    await saveConversation({ messages });
+    setMessages([]);
   };
-
-  const updateState = (state: State, newMessage: Message) => {
-    return {
-      optimisticMessages: [...state.optimisticMessages, newMessage],
-      pending: true,
-    };
-  };
-
-  const [state, optimisticallyUpdateMessages] = useOptimistic(
-    initialState,
-    updateState
-  );
-
-  const { optimisticMessages, pending } = state;
-
-  const postUserMessage = async (formData: FormData) => {
-    const humanUser = await getHumanUser();
-    const userId = humanUser.id;
-    const currentConversationId = humanUser.currentConversationId;
-
-    const data = Object.fromEntries(formData.entries());
-    const msg = data.msg.toString();
-
-    if (!msg) return console.error("Message cannot be empty");
-
-    if (!currentConversationId) return console.error("No conversation found");
-    const newUserMessage = {
-      id: -1,
-      conversationId: currentConversationId,
-      content: msg,
-      userId,
-    };
-
-    optimisticallyUpdateMessages(newUserMessage);
-    await handleNewUserMsg(msg);
-  };
-
-  const clearConversation = async () => {
-    // await saveConversation();
-    await clearMessages();
-  };
-
   return (
     <>
-      <Output messages={optimisticMessages} />
+      <Output messages={messages} />
       <ChatForm
-        disabled={pending}
-        action={postUserMessage}
-        secondaryAction={clearConversation}
+        onSecondaryButtonClick={secondaryAction}
+        stop={stop}
+        append={append}
+        isLoading={isLoading}
       />
     </>
   );
