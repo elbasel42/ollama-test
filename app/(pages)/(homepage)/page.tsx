@@ -5,7 +5,7 @@ const HomePage = async () => {
   const messages = await getMessages();
 
   return (
-    <main className='min-h-screen py-4 px-2 flex flex-col'>
+    <main>
       <Chat messages={messages} />
     </main>
   );

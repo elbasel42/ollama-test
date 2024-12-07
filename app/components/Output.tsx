@@ -21,13 +21,10 @@ export const Output = ({ messages }: OutputProps) => {
   }, [messages]);
 
   return (
-    <output
-      ref={ref}
-      className='space-y-4 flex-1 overflow-auto app-scrollbar px-4'
-    >
-      {messages.map(({ id, content }) => {
+  <output ref={ref} className='space-y-4 block mb-[20vh]' >
+      {messages.map(({ id, content , userId}) => {
         if (!content) return null;
-        return <ChatMessage key={id} content={content} />;
+        return <ChatMessage key={id} content={content} userId={userId}/>;
       })}
     </output>
   );

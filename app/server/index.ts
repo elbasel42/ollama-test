@@ -8,3 +8,4 @@ export { saveConversation } from "./saveConversation";
 export { getUserId } from "./getUserId";
 export { setCurrentConversationId } from "./setCurrentConversationId";
 export { getCurrentConversationId } from "./getCurrentConversationId";
+export { createMessage } from "./createMessage";

@@ -25,7 +25,7 @@ interface RootLayoutProps {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <html lang='en' className="dark">
+    <html lang='en' className="dark app-scrollbar">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
