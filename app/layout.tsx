@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import type { ReactNode } from "react";
 import { SetUpUser } from "@components";
+import { SideBar } from "./components/SideBar";
+import { prisma } from "@lib";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,7 +26,9 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-const RootLayout = ({ children }: RootLayoutProps) => {
+const RootLayout = async ({ children }: RootLayoutProps) => {
+
+  const conversations = await prisma.conversation.findMany();
   return (
     <html lang='en' className='dark app-scrollbar'>
       <SetUpUser />
@@ -32,6 +36,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <SideBar conversations={conversations} />
       </body>
     </html>
   );

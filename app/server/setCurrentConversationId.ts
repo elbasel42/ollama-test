@@ -1,8 +1,22 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { prisma } from "@lib";
+import { getHumanUser } from "./getHumanUser";
+import { revalidatePath } from "next/cache";
 
 export const setCurrentConversationId = async (conversationId: string) => {
-  const cookieStore = await cookies();
-  cookieStore.set("conversationId", conversationId);
+  const humanUser = await getHumanUser();
+
+  if (!humanUser) return console.error("No human user found");
+
+  // const conversation = await prisma.conversation.findUnique({
+  //   where: { id: conversationId },
+  // });
+
+  await prisma.user.update({
+    where: { id: humanUser?.id },
+    data: { currentConversationId: conversationId },
+  });
+
+  revalidatePath("/", "layout");
 };

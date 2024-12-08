@@ -16,6 +16,9 @@ export const SetUpUser = () => {
   };
 
   useEffect(() => {
+    const userIsSet = localStorage.getItem("userIsSet")?.toString();
+    if (userIsSet) return;
+    if (!window) return;
     setUpUser();
   }, []);
 

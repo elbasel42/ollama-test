@@ -14,6 +14,7 @@ import { Button } from "@ui";
 import type { ChatRequestOptions, CreateMessage, Message } from "ai";
 import { createMessage, getHumanUser } from "@server";
 import { convertToPrismaMessage } from "@utils";
+import { text } from "stream/consumers";
 interface ChatFormProps {
   // handleChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   // handleSubmit: (
@@ -45,8 +46,9 @@ export const ChatForm = ({
 
   const postUserMessage = async () => {
     if (!userMsg) return;
-    append({ content: userMsg, role: "user" });
+    await append({ content: userMsg, role: "user" });
     setUserMsg("");
+    textAreaRef.current?.focus();
   };
 
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {

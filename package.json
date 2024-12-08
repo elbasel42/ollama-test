@@ -11,10 +11,12 @@
   "dependencies": {
     "@langchain/community": "^0.3.17",
     "@langchain/ollama": "^0.1.2",
+    "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^6.0.1",
     "add": "^2.0.6",
     "ai": "^4.0.13",
     "cheerio": "^1.0.0",
+    "framer-motion": "^11.13.1",
     "langchain": "^0.3.6",
     "lucide-react": "^0.468.0",
     "next": "15.0.3",

@@ -14,6 +14,7 @@ export const Output = ({ messages }: OutputProps) => {
   useEffect(() => {
     const current = ref.current;
     if (!current) return;
+    console.log({ current });
     current.scrollTo({
       top: current.scrollHeight,
       behavior: "smooth",
@@ -22,7 +23,7 @@ export const Output = ({ messages }: OutputProps) => {
 
   console.log({ message: messages[-1] });
   return (
-    <output ref={ref} className='space-y-4 block mb-[20vh]'>
+    <output ref={ref} className='space-y-4 block h-[86vh] overflow-auto app-scrollbar'>
       {messages.map(({ id, content }) => {
         if (!content) return null;
         return <ChatMessage key={id} content={content} />;

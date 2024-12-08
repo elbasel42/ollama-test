@@ -4,9 +4,7 @@ import type { Message as UIMessage } from "ai";
 // import type { Message as PrismaMessage } from "@prisma/client";
 import { z } from "zod";
 import { getHumanUser } from "@server";
-import { CreateMessage } from "../server/createMessage";
 import { Message } from "@prisma/client";
-import { prisma } from "@lib";
 
 const PrismaMessageSchema = z.object({
   id: z.string(),
